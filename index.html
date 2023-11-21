@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SSE Client</title>
+    <script>
+        // Function to start the SSE connection
+        function startSSE(userId) {
+            const eventSource = new EventSource(`http://127.0.0.1:8000/events?user_id=${userId}`);
+
+            eventSource.onmessage = function (event) {
+                console.log('Event:', JSON.parse(event.data));
+                document.getElementById("messages").innerHTML += `<p>${event.data}</p>`;
+            };
+
+            eventSource.onerror = function (err) {
+                console.error('EventSource failed:', err);
+                eventSource.close();
+            };
+        }
+    </script>
+</head>
+
+<body>
+    <h1>Server-Sent Events (SSE) Client</h1>
+    <input type="text" id="userId" placeholder="Enter user ID" />
+    <button onclick="startSSE(document.getElementById('userId').value)">Connect</button>
+    <div id="messages"></div>
+</body>
+
+</html>
