@@ -7,11 +7,19 @@
     <script>
         // Function to start the SSE connection
         function startSSE(userId) {
-            const eventSource = new EventSource(`http://127.0.0.1:8000/events?user_id=${userId}`);
+            const eventSource = new EventSource(`http://127.0.0.1:5000/events?user_id=${userId}`);
+
+            let str_msg = "";
 
             eventSource.onmessage = function (event) {
-                console.log('Event:', JSON.parse(event.data));
-                document.getElementById("messages").innerHTML += `<p>${event.data}</p>`;
+                console.log('Event:', event.data);
+                let msg = JSON.parse(event.data);
+
+                if (msg.type === "answer_completed") {
+                    console.log("Answer is completed", msg.id_two);
+                } else if (msg.type === "answer") {
+                    document.getElementById("messages").innerHTML = `<div>${msg.answer}</div>`;
+                }
             };
 
             eventSource.onerror = function (err) {
