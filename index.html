@@ -15,10 +15,10 @@
                 console.log('Event:', event.data);
                 let msg = JSON.parse(event.data);
 
-                if (msg.type === "answer_completed") {
+                if (msg.id_two) {
                     console.log("Answer is completed", msg.id_two);
                 } else if (msg.type === "answer") {
-                    document.getElementById("messages").innerHTML = `<div>${msg.answer}</div>`;
+                    document.getElementById("messages").innerHTML = `<div>${msg.message}</div>`;
                 }
             };
 
