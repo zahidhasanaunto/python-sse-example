@@ -5,11 +5,13 @@
     <meta charset="UTF-8">
     <title>SSE Client</title>
     <script>
-        // Function to start the SSE connection
-        function startSSE(userId) {
-            const eventSource = new EventSource(`http://127.0.0.1:5000/events?user_id=${userId}`);
+        let eventSource;
+        let retryInterval = 1000;
 
-            let str_msg = "";
+        function startSSE(userId) {
+            console.log("Starting SSE for user", userId);
+            const URL = 'https://ersa-stg.programming-hero.com';
+            eventSource = new EventSource(`${URL}/events?user_id=${userId}`);
 
             eventSource.onmessage = function (event) {
                 console.log('Event:', event.data);
@@ -25,6 +27,9 @@
             eventSource.onerror = function (err) {
                 console.error('EventSource failed:', err);
                 eventSource.close();
+                setTimeout(function () {
+                    startSSE(userId);
+                }, retryInterval);
             };
         }
     </script>
